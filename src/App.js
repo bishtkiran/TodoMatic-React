@@ -9,8 +9,24 @@ function App(props) {
     const newTask = {id: "todo-"+ nanoid(), name: name, completed: false};
     setTasks([...tasks, newTask]);
   }
+  function toggleTaskCompleted(id){
+    const updatedTasks = tasks.map((task)=>{
+      if(id === task.id)
+         return {...task, completed: !task.completed}
+      return task;
+    });
+    setTasks(updatedTasks);
+  }
+  function deleteTask(id) {
+    const remainingTasks = tasks.filter((task) => id !== task.id);
+    setTasks(remainingTasks);
+  }
+  
   const tasksList = tasks.map((task) => 
-  <Todo name={task.name} completed={task.completed} id={task.id} key={task.id}/>)
+  <Todo name={task.name} completed={task.completed} id={task.id} 
+  key={task.id} toggleTaskCompleted={toggleTaskCompleted} deleteTask={deleteTask} />)
+  const tasksNoun = tasksList.length > 1 ? 'tasks' : 'task';
+  const headingText = `${tasksList.length} ${tasksNoun} remaining`;
   return (
     <div className="todoapp stack-large">
       <h1>TodoMatic</h1>
@@ -21,7 +37,7 @@ function App(props) {
       <FilterButton text="Completed"/>
     </div>
       <h2 id="list-heading">
-        3 tasks remaining
+        {headingText}
       </h2>
       <ul
         role="list"
